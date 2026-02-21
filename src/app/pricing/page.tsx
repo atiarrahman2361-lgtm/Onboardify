@@ -2,8 +2,13 @@ import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Check, Info } from "lucide-react"
 import Link from "next/link"
+import { getSession } from "@/lib/auth/session"
 
-export default function PricingPage() {
+export default async function PricingPage() {
+    const session = await getSession()
+    const targetLink = session?.userId ? "/dashboard/settings/billing" : "/sign-up"
+    const buttonText = session?.userId ? "Manage Subscription" : "Get Started"
+
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
             <Header />
@@ -32,8 +37,8 @@ export default function PricingPage() {
                             <span className="text-5xl font-extrabold">$29</span>
                             <span className="text-muted-foreground">/month</span>
                         </div>
-                        <Link href="/sign-up" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 font-semibold py-3 rounded-xl transition-colors text-center mb-8">
-                            Get Started
+                        <Link href={targetLink} className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 font-semibold py-3 rounded-xl transition-colors text-center mb-8">
+                            {buttonText}
                         </Link>
                         <ul className="space-y-4 flex-1">
                             <li className="flex items-start gap-3"><Check className="w-5 h-5 text-emerald-500 shrink-0" /><span className="text-sm">Up to 5 active clients</span></li>
@@ -56,8 +61,8 @@ export default function PricingPage() {
                             <span className="text-5xl font-extrabold">$79</span>
                             <span className="text-muted-foreground">/month</span>
                         </div>
-                        <Link href="/sign-up" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-md font-semibold py-3 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 text-center mb-8">
-                            Get Started
+                        <Link href={targetLink} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-md font-semibold py-3 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 text-center mb-8">
+                            {buttonText}
                         </Link>
                         <ul className="space-y-4 flex-1">
                             <li className="flex items-start gap-3"><Check className="w-5 h-5 text-primary shrink-0" /><span className="text-sm font-medium">Unlimited active clients</span></li>
@@ -92,16 +97,26 @@ export default function PricingPage() {
                 </div>
 
                 {/* FAQ Snippet for Pricing */}
-                <div className="max-w-3xl mx-auto mt-32 space-y-8">
-                    <h2 className="text-3xl font-bold text-center mb-12">Frequently asked about pricing</h2>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 className="font-semibold flex items-center gap-2 mb-2"><Info className="w-4 h-4 text-muted-foreground" /> Can I cancel at any time?</h4>
-                            <p className="text-sm text-muted-foreground leading-relaxed">Yes, all our plans are month-to-month. You can cancel your subscription at any time without any hidden fees or cancellation penalties.</p>
+                <div className="max-w-4xl mx-auto mt-32 space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-500">
+                    <div className="text-center mb-12 space-y-4">
+                        <h2 className="text-3xl font-bold">Frequently asked about pricing</h2>
+                        <p className="text-muted-foreground text-lg">Everything you need to know about our billing and plans.</p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="p-6 rounded-2xl subtle-3d-card bg-card mb-4 flex gap-4">
+                            <Info className="w-6 h-6 text-primary shrink-0 mt-1" />
+                            <div>
+                                <h3 className="text-xl font-bold mb-2">Can I cancel at any time?</h3>
+                                <p className="text-muted-foreground">Yes, all our plans are month-to-month. You can cancel your subscription at any time without any hidden fees or cancellation penalties.</p>
+                            </div>
                         </div>
-                        <div>
-                            <h4 className="font-semibold flex items-center gap-2 mb-2"><Info className="w-4 h-4 text-muted-foreground" /> Do you offer annual discounts?</h4>
-                            <p className="text-sm text-muted-foreground leading-relaxed">Yes! If you choose to pay annually, you will receive a 20% discount across all tiers. Contact sales to set up an annual plan.</p>
+                        <div className="p-6 rounded-2xl subtle-3d-card bg-card mb-4 flex gap-4">
+                            <Info className="w-6 h-6 text-primary shrink-0 mt-1" />
+                            <div>
+                                <h3 className="text-xl font-bold mb-2">Do you offer annual discounts?</h3>
+                                <p className="text-muted-foreground">Yes! If you choose to pay annually, you will receive a 20% discount across all tiers. Contact sales to set up an annual plan.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,3 +126,4 @@ export default function PricingPage() {
         </div>
     )
 }
+

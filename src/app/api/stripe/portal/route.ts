@@ -23,6 +23,11 @@ export async function GET(req: Request) {
         const returnUrl = new URL(req.url)
         const baseUrl = `${returnUrl.protocol}//${returnUrl.host}`
 
+        if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_dummy') {
+            // Mock portal for users without Stripe configured
+            return NextResponse.redirect(`${baseUrl}/dashboard/settings/billing?mock_portal=true`)
+        }
+
         const stripeSession = await stripe.billingPortal.sessions.create({
             customer: user.stripeCustomerId,
             return_url: `${baseUrl}/dashboard/settings/billing`,

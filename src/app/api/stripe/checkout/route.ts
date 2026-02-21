@@ -31,6 +31,20 @@ export async function POST(req: Request) {
         const returnUrl = new URL(req.url)
         const baseUrl = `${returnUrl.protocol}//${returnUrl.host}`
 
+        if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_dummy') {
+            // Mock checkout process for users without Stripe keys configured
+            await prisma.user.update({
+                where: { id: session.userId as string },
+                data: {
+                    stripeSubscriptionId: `sub_mock_${Date.now()}`,
+                    stripeCustomerId: `cus_mock_${session.userId}`,
+                    stripePriceId: priceId,
+                    stripeCurrentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // +30 days
+                },
+            });
+            return NextResponse.json({ url: `${baseUrl}/dashboard/settings/billing?success=true` })
+        }
+
         const stripeSession = await stripe.checkout.sessions.create({
             success_url: `${baseUrl}/dashboard/settings/billing?success=true`,
             cancel_url: `${baseUrl}/dashboard/settings/billing?canceled=true`,

@@ -44,6 +44,21 @@ export async function uploadAvatarAction(formData: FormData) {
     }
 
     try {
+        if (!process.env.BLOB_READ_WRITE_TOKEN) {
+            // Mock upload by converting to base64 if no Blob token is configured
+            const arrayBuffer = await file.arrayBuffer()
+            const buffer = Buffer.from(arrayBuffer)
+            const base64Data = `data:${file.type};base64,${buffer.toString('base64')}`
+
+            await prisma.user.update({
+                where: { id: session.userId as string },
+                data: { image: base64Data },
+            })
+
+            revalidatePath("/dashboard")
+            return { success: true, url: base64Data }
+        }
+
         const blob = await put(`avatars/${session.userId}-${file.name}`, file, {
             access: "public",
         })
