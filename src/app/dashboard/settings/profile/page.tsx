@@ -1,2 +1,2 @@
-import ProfileSettingsPage from "./page"
+import ProfileSettingsPage from "../page"
 export default ProfileSettingsPage

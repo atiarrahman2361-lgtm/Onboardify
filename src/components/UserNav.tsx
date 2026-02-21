@@ -58,7 +58,7 @@ export function UserNav({ email }: UserNavProps) {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/dashboard" className="cursor-pointer flex items-center">
+                        <Link href="/dashboard/settings/profile" className="cursor-pointer flex items-center">
                             <Settings className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                         </Link>

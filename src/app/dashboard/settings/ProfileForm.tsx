@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { Upload, Loader2, User as UserIcon } from "lucide-react"
 import Image from "next/image"
-import { updateProfileAction, uploadAvatarAction } from "../actions/settings"
+import { updateProfileAction, uploadAvatarAction } from "@/app/actions/settings"
 
 interface ProfileFormProps {
     initialName: string
