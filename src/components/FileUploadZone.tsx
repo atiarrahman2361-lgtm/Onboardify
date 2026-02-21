@@ -25,7 +25,7 @@ export function FileUploadZone({ onUploadAction, disabled }: FileUploadZoneProps
         setIsDragging(false)
     }, [])
 
-    const validateAndUpload = (file: File) => {
+    const validateAndUpload = useCallback((file: File) => {
         setError(null)
 
         // Validation
@@ -51,7 +51,7 @@ export function FileUploadZone({ onUploadAction, disabled }: FileUploadZoneProps
                 // The parent component might handle the success toast via the action returning or revalidating the path.
             }
         })
-    }
+    }, [onUploadAction])
 
     const handleDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault()
