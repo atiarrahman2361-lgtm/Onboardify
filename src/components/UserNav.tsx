@@ -12,15 +12,17 @@ import {
 import { Button } from "@/components/ui/button"
 import { User, Settings, LogOut, LayoutDashboard } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { signOutAction } from "@/lib/auth/session"
 
 interface UserNavProps {
     email: string
+    image?: string
 }
 
-export function UserNav({ email }: UserNavProps) {
+export function UserNav({ email, image }: UserNavProps) {
     const router = useRouter()
 
     const handleSignOut = async () => {
@@ -36,8 +38,12 @@ export function UserNav({ email }: UserNavProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="relative h-10 w-10 rounded-full bg-primary/10 border-primary/20 hover:bg-primary/20 focus:ring-2 focus:ring-primary focus:outline-none transition-all">
-                    <User className="w-5 h-5 text-primary" />
+                <Button variant="outline" className="relative h-10 w-10 rounded-full bg-primary/10 border-primary/20 hover:bg-primary/20 focus:ring-2 focus:ring-primary focus:outline-none transition-all overflow-hidden p-0">
+                    {image ? (
+                        <Image src={image} alt="Avatar" fill className="object-cover" />
+                    ) : (
+                        <User className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
+                    )}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>

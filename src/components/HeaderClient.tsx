@@ -9,9 +9,10 @@ import { UserNav } from "./UserNav"
 
 interface HeaderClientProps {
     userEmail?: string
+    userImage?: string
 }
 
-export function HeaderClient({ userEmail }: HeaderClientProps) {
+export function HeaderClient({ userEmail, userImage }: HeaderClientProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
     const navLinks = [
@@ -36,7 +37,7 @@ export function HeaderClient({ userEmail }: HeaderClientProps) {
                 </Link>
                 <div className="flex md:hidden items-center gap-4">
                     <ThemeToggle />
-                    {userEmail && <UserNav email={userEmail} />}
+                    {userEmail && <UserNav email={userEmail} image={userImage} />}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="p-2 text-foreground hover:bg-accent rounded-md transition-colors"
@@ -63,7 +64,7 @@ export function HeaderClient({ userEmail }: HeaderClientProps) {
             <div className="hidden md:flex items-center gap-4">
                 <ThemeToggle />
                 {userEmail ? (
-                    <UserNav email={userEmail} />
+                    <UserNav email={userEmail} image={userImage} />
                 ) : (
                     <>
                         <Link href="/sign-in" className="text-sm font-medium hover:text-primary transition-colors">
