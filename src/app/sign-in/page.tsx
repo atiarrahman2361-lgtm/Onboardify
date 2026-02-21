@@ -1,8 +1,23 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Lock } from "lucide-react"
+import { Lock } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export default function SignInPage() {
+    const router = useRouter()
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        toast.loading("Authenticating...", { duration: 1000 })
+        setTimeout(() => {
+            toast.success("Welcome back!")
+            router.push("/dashboard")
+        }, 1000)
+    }
+
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] relative">
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_800px_at_50%_0%,#d5c5ff,transparent)] dark:bg-[radial-gradient(circle_800px_at_50%_0%,#322557,transparent)] opacity-50"></div>
@@ -25,7 +40,7 @@ export default function SignInPage() {
                         <p className="text-sm text-muted-foreground">Enter your email to sign in to your account</p>
                     </div>
 
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-foreground">Email</label>
                             <input
