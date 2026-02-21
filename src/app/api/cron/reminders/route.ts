@@ -38,6 +38,12 @@ export async function GET(request: Request) {
                 }
             },
             include: {
+                user: {
+                    select: {
+                        companyName: true,
+                        supportEmail: true
+                    }
+                },
                 items: {
                     where: {
                         status: "pending"
@@ -55,9 +61,12 @@ export async function GET(request: Request) {
             // We asserted clientEmail is not null in the query
             if (!project.clientEmail) return null
 
+            const agencyName = project.user.companyName || "Onboardify"
+            const fromEmail = project.user.supportEmail || "hello@onboardify.com"
+
             // Send via Resend
             return resend.emails.send({
-                from: "Onboardify <hello@onboardify.com>",
+                from: `${agencyName} <${fromEmail}>`,
                 to: [project.clientEmail],
                 subject: `Pending Tasks for ${project.name}`,
                 react: ReminderEmail({

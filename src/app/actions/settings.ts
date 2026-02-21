@@ -60,3 +60,30 @@ export async function uploadAvatarAction(formData: FormData) {
         return { error: "Failed to upload avatar" }
     }
 }
+
+export async function updateAgencyAction(formData: FormData) {
+    const session = await getSession()
+    if (!session || !session.userId) {
+        return { error: "Unauthorized" }
+    }
+
+    const companyName = formData.get("companyName") as string
+    const supportEmail = formData.get("supportEmail") as string
+
+    if (!companyName || !supportEmail) {
+        return { error: "Company name and support email are required" }
+    }
+
+    try {
+        await prisma.user.update({
+            where: { id: session.userId as string },
+            data: { companyName, supportEmail },
+        })
+
+        revalidatePath("/dashboard")
+        return { success: true }
+    } catch (error) {
+        console.error("Failed to update agency settings", error)
+        return { error: "Failed to update agency settings" }
+    }
+}
