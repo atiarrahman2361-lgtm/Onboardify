@@ -11,9 +11,10 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function signUpAction(formData: FormData) {
     const email = formData.get("email") as string
     const password = formData.get("password") as string
+    const name = formData.get("name") as string
 
-    if (!email || !password) {
-        return { error: "Email and password are required" }
+    if (!email || !password || !name) {
+        return { error: "Name, Email, and password are required" }
     }
 
     try {
@@ -30,7 +31,7 @@ export async function signUpAction(formData: FormData) {
         const user = await prisma.user.create({
             data: {
                 email,
-                name: email.split("@")[0]
+                name
             }
         })
 

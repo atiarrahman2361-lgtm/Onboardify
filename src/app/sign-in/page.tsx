@@ -12,18 +12,23 @@ export default function SignInPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        toast.loading("Authenticating...", { duration: 1000 })
+        const toastId = toast.loading("Authenticating...")
 
         const formData = new FormData(e.currentTarget)
         const res = await signInAction(formData)
 
-        if (res.error) {
-            toast.error(res.error)
+        if (res?.error) {
+            toast.error(res.error, { id: toastId })
             return
         }
 
-        toast.success("Welcome back!")
+        toast.success("Welcome back!", { id: toastId })
+        router.refresh()
         router.push("/dashboard")
+    }
+
+    const handleGoogleSSO = () => {
+        toast.info("Google Authentication is not yet configured. Please sign in with Email & Password.")
     }
 
     return (
@@ -50,11 +55,11 @@ export default function SignInPage() {
 
                     <form className="space-y-4" onSubmit={handleSubmit}>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-foreground">Email</label>
+                            <label className="text-sm font-medium text-foreground">Email Address</label>
                             <input
                                 type="email"
                                 name="email"
-                                placeholder="m@example.com"
+                                placeholder="name@company.com"
                                 className="w-full p-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none transition-all"
                                 required
                             />
@@ -67,6 +72,7 @@ export default function SignInPage() {
                             <input
                                 type="password"
                                 name="password"
+                                placeholder="••••••••"
                                 className="w-full p-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none transition-all"
                                 required
                             />
@@ -86,7 +92,7 @@ export default function SignInPage() {
                         </div>
                     </div>
 
-                    <button type="button" className="w-full bg-background border border-border font-medium py-3 rounded-lg shadow-sm hover:bg-muted hover:shadow transition-all duration-300 flex items-center justify-center gap-2">
+                    <button type="button" onClick={handleGoogleSSO} className="w-full bg-background border border-border font-medium py-3 rounded-lg shadow-sm hover:bg-muted hover:shadow transition-all duration-300 flex items-center justify-center gap-2">
                         <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true"><path d="M12.0003 4.75C13.7703 4.75 15.3553 5.36002 16.6053 6.54998L20.0303 3.125C17.9502 1.19 15.2353 0 12.0003 0C7.31028 0 3.25527 2.69 1.25024 6.60998L5.27028 9.76498C6.21525 6.86002 8.87028 4.75 12.0003 4.75Z" fill="#EA4335"></path><path d="M23.49 12.275C23.49 11.49 23.415 10.73 23.3 10H12V14.51H18.47C18.18 15.99 17.34 17.25 16.08 18.1L20.1 21.25C22.45 19.1 23.49 15.965 23.49 12.275Z" fill="#4285F4"></path><path d="M5.26498 14.2949C5.02498 13.5699 4.88501 12.7999 4.88501 11.9999C4.88501 11.1999 5.01998 10.4299 5.26498 9.7049L1.23999 6.54998C0.474976 8.04998 0 9.76498 0 11.9999C0 14.2349 0.474976 15.9499 1.23999 17.4499L5.26498 14.2949Z" fill="#FBBC05"></path><path d="M12.0004 24.0001C15.2404 24.0001 17.9654 22.935 20.1054 21.095L16.0804 17.945C14.9504 18.72 13.5804 19.2051 12.0004 19.2051C8.8704 19.2051 6.21537 17.095 5.26538 14.195L1.24036 17.35C3.25538 21.2699 7.3104 24.0001 12.0004 24.0001Z" fill="#34A853"></path></svg>
                         Google
                     </button>
