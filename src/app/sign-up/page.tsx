@@ -5,17 +5,25 @@ import Image from "next/image"
 import { Sparkles } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { signUpAction } from "../actions/user-auth"
 
 export default function SignUpPage() {
     const router = useRouter()
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         toast.loading("Creating account...", { duration: 1000 })
-        setTimeout(() => {
-            toast.success("Account created successfully!")
-            router.push("/dashboard")
-        }, 1000)
+
+        const formData = new FormData(e.currentTarget)
+        const res = await signUpAction(formData)
+
+        if (res.error) {
+            toast.error(res.error)
+            return
+        }
+
+        toast.success("Account created successfully!")
+        router.push("/dashboard")
     }
 
     return (
@@ -47,6 +55,7 @@ export default function SignUpPage() {
                             <label className="text-sm font-medium text-foreground">Work Email</label>
                             <input
                                 type="email"
+                                name="email"
                                 placeholder="m@example.com"
                                 className="w-full p-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none transition-all"
                                 required
@@ -56,6 +65,7 @@ export default function SignUpPage() {
                             <label className="text-sm font-medium text-foreground">Password</label>
                             <input
                                 type="password"
+                                name="password"
                                 className="w-full p-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none transition-all"
                                 required
                             />

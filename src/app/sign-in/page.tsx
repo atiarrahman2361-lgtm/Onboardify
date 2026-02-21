@@ -5,17 +5,25 @@ import Image from "next/image"
 import { Lock } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { signInAction } from "../actions/user-auth"
 
 export default function SignInPage() {
     const router = useRouter()
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         toast.loading("Authenticating...", { duration: 1000 })
-        setTimeout(() => {
-            toast.success("Welcome back!")
-            router.push("/dashboard")
-        }, 1000)
+
+        const formData = new FormData(e.currentTarget)
+        const res = await signInAction(formData)
+
+        if (res.error) {
+            toast.error(res.error)
+            return
+        }
+
+        toast.success("Welcome back!")
+        router.push("/dashboard")
     }
 
     return (
@@ -45,6 +53,7 @@ export default function SignInPage() {
                             <label className="text-sm font-medium text-foreground">Email</label>
                             <input
                                 type="email"
+                                name="email"
                                 placeholder="m@example.com"
                                 className="w-full p-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none transition-all"
                                 required
@@ -57,6 +66,7 @@ export default function SignInPage() {
                             </div>
                             <input
                                 type="password"
+                                name="password"
                                 className="w-full p-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary outline-none transition-all"
                                 required
                             />
